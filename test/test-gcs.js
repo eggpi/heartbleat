@@ -26,4 +26,29 @@ exports["test packGCS"] = function(assert) {
   assert.equal(gcs.packGCS(longNumberList, 64), longGCS);
 }
 
+exports["test patchGCS"] = function(assert) {
+  var numberList = [51, 76, 92, 101, 119, 215];
+  var packed = gcs.packGCS(numberList, 32);
+
+  var testResult = numberList.concat([]);
+  testResult.splice(3, 0, 95, 97);
+  assert.deepEqual(
+      gcs.unpackGCS(gcs.patchGCS(packed, 32, [95, 97], []), 32),
+      testResult);
+
+  var testResult = numberList.concat([]);
+  testResult.splice(0, 2);
+  assert.deepEqual(
+      gcs.unpackGCS(gcs.patchGCS(packed, 32, [], [51, 76]), 32),
+      testResult);
+
+  var testResult = numberList.concat([]);
+  testResult.splice(0, 2, 49);
+  testResult.splice(3, 0, 104);
+  testResult.push(300);
+  assert.deepEqual(
+      gcs.unpackGCS(gcs.patchGCS(packed, 32, [49, 104, 300], [51, 76]), 32),
+      testResult);
+}
+
 require("sdk/test").run(exports);
