@@ -51,4 +51,12 @@ exports["test patchGCS"] = function(assert) {
       testResult);
 }
 
+exports["test searchGCS"] = function(assert) {
+  for (var i = 0; i < longNumberList.length; i++) {
+    assert.ok(gcs.searchGCS(longGCS, 64, longNumberList[i]));
+  }
+
+  assert.ok(!gcs.searchGCS(longGCS, 64, longNumberList[i] + 1));
+}
+
 require("sdk/test").run(exports);
